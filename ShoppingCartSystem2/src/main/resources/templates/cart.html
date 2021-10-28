@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+</head>
+<body>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Amount</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product:${cart}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.productName}"></td>
+        <td th:text="${product.price}"></td>
+        <td>
+            <button class="btn ui-button btn-primary"> - </button> <!-- länka till decrease/increase-endpoints? -->
+            <span th:text="${product.amount}"></span>
+            <button class="btn ui-button btn-primary"> + </button>
+        </td>
+
+        <td> <a class="btn ui-button btn-primary"  href="#" th:href = "@{/deleteProduct/} + ${product.id}">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
