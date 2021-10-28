@@ -47,6 +47,12 @@ public class ProductController {
         return "store";
     }
 
+    @GetMapping("/")
+    public String listProductsInRoot(Model model) {
+        model.addAttribute("store", getProducts());
+        return "store";
+    }
+
     @GetMapping("/addProduct/{id}")
     public String addProduct(@PathVariable("id") String id) {
 
