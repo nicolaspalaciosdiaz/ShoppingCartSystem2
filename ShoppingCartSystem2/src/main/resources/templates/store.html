@@ -24,11 +24,16 @@
         </div>
     </div>
 </div>
-
-<a href="/cart" class="btn btn-secondary">View Cart</a>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" class="btn btn-secondary" value="Sign Out"/>
-</form>
+<br>
+<div style="display: inline-flex;">
+    &#10240&#10240
+    <a href="/cart" class="btn btn-primary">View Cart</a>
+    &#10240
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" class="btn btn-primary" value="Sign Out"/>
+    </form>
+</div>
+<br>&#10240
 
 </body>
 </html>
