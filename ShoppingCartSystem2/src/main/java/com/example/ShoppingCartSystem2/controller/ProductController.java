@@ -22,8 +22,8 @@ public class ProductController {
         this.service = service;
     }
 
-    @Autowired
-    private ProductRepository repository;
+    //@Autowired
+    //private ProductRepository repository;
     // Kopplar till mit repo.
 
     private List<Product> getProducts(){
@@ -41,8 +41,24 @@ public class ProductController {
         return products;
     }
 
+    public int calculateTotal() {
+        List <Product> productsInCart = service.findAllProducts();
+        int total = 0;
+        for (Product product: productsInCart) {
+            total += product.getPrice() * product.getAmount();
+        }
+
+        return total;
+    }
+
     @GetMapping("/store")
     public String listProductsInStore(Model model) {
+        model.addAttribute("store", getProducts());
+        return "store";
+    }
+
+    @GetMapping("/")
+    public String listProductsInRoot(Model model) {
         model.addAttribute("store", getProducts());
         return "store";
     }
@@ -50,15 +66,15 @@ public class ProductController {
     @GetMapping("/addProduct/{id}")
     public String addProduct(@PathVariable("id") String id) {
 
-        if (repository.findById(id).isPresent()) { // Om produkten redan finns (söker på id)...
-            Product product = repository.findById(id).get();
+        if (service.findProductById(id).isPresent()) { // Om produkten redan finns (söker på id)...
+            Product product = service.findProductById(id).get();
             product.setAmount(product.getAmount() + 1); // ...ökas antalet med 1
-            repository.save(product); // ...och uppdateras i databasen.
+            service.save(product); // ...och uppdateras i databasen.
         } else { // Annars...
             List<Product> store = getProducts();
             for (Product product: store) { // ...hittar vi produkten vi valt med rätt id från listan
                 if (product.id.equals(id)) {
-                    repository.save(product); // ...och lägger till i databasen.
+                    service.save(product); // ...och lägger till i databasen.
                 }
             }
         }
@@ -68,15 +84,40 @@ public class ProductController {
 
     @GetMapping("/cart")
     public String getProductsFromCart(Model model) {
-        model.addAttribute("cart", repository.findAll());
+        model.addAttribute("cart", service.findAllProducts());
+        model.addAttribute("total", calculateTotal());
         return "cart";
     }
     // Hittar produkterna i databasen! "Read"
 
     @GetMapping("/deleteProduct/{id}")
     public String deleteProduct(@PathVariable (value = "id") String id) {
-        repository.deleteById(id);
+        service.delete(id);
         return "redirect:/cart";
     }
     // Tar bort från databasen "Delete"
+
+    @GetMapping("/decrease/{id}")
+    public String decrease(@PathVariable (value = "id") String id) {
+        if (service.findProductById(id).isPresent()) {
+            Product product = service.findProductById(id).get();
+            product.setAmount(product.getAmount() - 1);
+            if (product.getAmount() < 1) {
+                service.delete(id);
+            } else {
+                service.save(product);
+            }
+        }
+        return "redirect:/cart";
+    }
+    @GetMapping("/increase/{id}")
+    public String increase(@PathVariable (value = "id") String id) {
+        if (service.findProductById(id).isPresent()) {
+            Product product = service.findProductById(id).get();
+            product.setAmount(product.getAmount() + 1);
+
+            service.save(product);
+        }
+        return "redirect:/cart";
+    }
 }

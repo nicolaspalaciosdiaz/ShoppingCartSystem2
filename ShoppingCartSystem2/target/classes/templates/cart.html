@@ -2,7 +2,7 @@
 <html xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cart - Super Mega Market Online</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -10,30 +10,39 @@
 
 </head>
 <body>
+<h1>Super Mega Market Online</h1>
+<h3>Cart</h3>
+<br>
+
 <table class="table">
     <thead>
     <tr>
-        <th>Id</th>
         <th>Product</th>
-        <th>Price</th>
+        <th>Price per item</th>
         <th>Amount</th>
-        <th>Delete</th>
+        <th>Remove</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="product:${cart}">
-        <td th:text="${product.id}"></td>
         <td th:text="${product.productName}"></td>
         <td th:text="${product.price}"></td>
         <td>
-            <button class="btn ui-button btn-primary"> - </button> <!-- länka till decrease/increase-endpoints? -->
+            <a th:href="@{/decrease/} + ${product.id}" class="btn ui-button btn-primary"> − </a> <!-- länka till decrease/increase-endpoints? -->
             <span th:text="${product.amount}"></span>
-            <button class="btn ui-button btn-primary"> + </button>
+            <a th:href="@{/increase/} + ${product.id}" class="btn ui-button btn-primary"> + </a>
         </td>
 
-        <td> <a class="btn ui-button btn-primary"  href="#" th:href = "@{/deleteProduct/} + ${product.id}">Delete</a></td>
+        <td> <a class="btn ui-button btn-primary"  href="#" th:href = "@{/deleteProduct/} + ${product.id}">Remove from cart</a></td>
+    </tr>
+    <tr>
+        <th th:text="'Total cost: ' + ${total} + ' kr'"></th>
+        <th></th>
+        <th></th>
+        <th></th>
     </tr>
     </tbody>
 </table>
+<a href="/store" class="btn btn-primary">Continue shopping</a>
 </body>
 </html>
